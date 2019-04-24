@@ -132,6 +132,7 @@ tags
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/
 
 # Generated files
 .idea/**/contentModel.xml
@@ -205,3 +206,6 @@ fabric.properties
 .idea/sonarlint
 
 # End of https://www.gitignore.io/api/git,vim,node,webstorm
+
+## PackageLock
+package-lock.json

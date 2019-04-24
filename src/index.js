@@ -26,6 +26,7 @@ app.use(async (req, res, next) => {
 // Routes
 
 app.use("/users", routes.user);
+app.use("/company", routes.company);
 
 // Start
 connectDb().then(async () => {
