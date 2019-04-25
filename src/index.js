@@ -28,6 +28,11 @@ app.use(async (req, res, next) => {
 app.use("/users", routes.user);
 app.use("/company", routes.company);
 
+// Error handling
+app.use((err, req, res, next) => {
+  console.error("ERROR", err);
+});
+
 // Start
 connectDb().then(async () => {
   app.listen(process.env.PORT, () =>

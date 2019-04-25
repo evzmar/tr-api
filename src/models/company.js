@@ -1,29 +1,46 @@
 const mongoose = require("mongoose");
+const { helpers } = require("./../helpers");
 
-const companySchema = new mongoose.Schema({
-  name: {
-    type: String,
-    unique: true
+const companySchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      unique: true,
+      required: true
+    },
+    type: {
+      type: String,
+      enum: ["logistics-manager", "transportation-manager"],
+      required: true
+    },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+      }
+    ]
   },
-  type: {
-    type: String,
-    enum: ["shipping", "transportation"]
-  },
-  users: {
-    type: Array
+  { collection: "companies" }
+);
+
+companySchema.statics.addUser = async function(companyId, userId) {
+  try {
+    const updatedCompany = await Company.findById(companyId);
+    updatedCompany.users.push(userId);
+    return await Company.findByIdAndUpdate(companyId, updatedCompany, {
+      new: true
+    });
+  } catch (e) {
+    return helpers.ErrorHandler(e);
   }
-});
+};
 
-companySchema.statics.createCompany = async function(
-  name,
-  type = "shipping",
-  users = {}
-) {
-  const company = new Company({ name, type, users });
-  company.save(err => {
-    if (err) console.log(err);
-    console.log(`Company ${name} was added`);
-  });
+companySchema.statics.createCompany = async function(name, type, users = {}) {
+  try {
+    return await Company.create({ name, type, users });
+  } catch (e) {
+    return helpers.ErrorHandler(e);
+  }
 };
 
 const Company = mongoose.model("Company", companySchema);
